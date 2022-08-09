@@ -20,7 +20,8 @@ def moving_average(times, num_runs):
 
 
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument("file", help="JSON file with benchmark results")
+parser.add_argument("file1", help="JSON file with benchmark results")
+parser.add_argument("file2", help="JSON file with benchmark results")
 parser.add_argument("--title", help="Plot Title")
 parser.add_argument("-o", "--output", help="Save image to the given filename.")
 parser.add_argument(
@@ -30,10 +31,16 @@ parser.add_argument(
     metavar="num_runs",
     help="Width of the moving-average window (default: N/5)",
 )
+parser.add_argument(
+    "--moving-average-width2",
+    type=int,
+    metavar="num_runs",
+    help="Width of the moving-average window (default: N/5)",
+)
 
 args = parser.parse_args()
 
-with open(args.file) as f:
+with open(args.file1) as f:
     results = json.load(f)["results"]
 
 label = results[0]["command"]
@@ -51,6 +58,26 @@ moving_average_width = (
 
 moving_average = moving_average(times, moving_average_width)
 plt.plot(nums, moving_average, "-", color="blue")
+
+
+with open(args.file2) as f:
+    results = json.load(f)["results"]
+
+label = results[0]["command"]
+times = results[0]["times"]
+num = len(times)
+nums = range(num)
+
+plt.scatter(x=nums, y=times, marker=".", color="green")
+plt.ylim([0, None])
+plt.xlim([-1, num])
+
+# moving_average_width2 = (
+#     num // 5 if args.moving_average_width2 is None else args.moving_average_width2
+# )
+
+# moving_average2 = moving_average(times, moving_average_width2)
+# plt.plot(nums, moving_average2, "-", color="dark")
 
 if args.title:
     plt.title(args.title)
