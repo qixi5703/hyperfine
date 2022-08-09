@@ -51,5 +51,6 @@ diff =mean1-mean2
 # fi = open('output.txt', 'w')
 
 print(args.title, "difference:", diff)
+print('percent:{:.2%}'.format(diff/mean1))
 # print 'difference', diff
 # fi.close()
